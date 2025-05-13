@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
+
 import httpx
 
-from openremote.url_builder import UrlBuilder
+from .url_builder import UrlBuilder
 
 
 class Authenticator:

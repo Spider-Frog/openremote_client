@@ -1,7 +1,7 @@
-from openremote.http import HttpClient
 from typing import Any
-from openremote.schemas.asset_object import AssetObject
-import httpx
+
+from ..http import HttpClient
+from ..schemas.asset_object import AssetObject
 
 
 class Asset:

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-from openremote.schemas.value_constraint import ValueConstraint
-from openremote.schemas.value_format import ValueFormat
+from .value_constraint import ValueConstraint
+from .value_format import ValueFormat
 
 
 class ValueDescriptorObject(BaseModel):

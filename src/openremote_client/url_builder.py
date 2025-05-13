@@ -16,4 +16,3 @@ class UrlBuilder:
             port=self.__base_url.port,
             path=path
         ).encoded_string()
-

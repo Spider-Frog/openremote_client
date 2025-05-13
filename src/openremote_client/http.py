@@ -1,14 +1,13 @@
-from typing import Optional, Union, Any, Generic, TypeVar
+from typing import Optional, Union, Any, TypeVar
 
 import httpx
 from httpx import Response
+from httpx._client import UseClientDefault, USE_CLIENT_DEFAULT
 from httpx._types import QueryParamTypes, HeaderTypes, CookieTypes, AuthTypes, TimeoutTypes, RequestExtensions, \
     RequestContent, RequestData, RequestFiles
-from httpx._client import UseClientDefault, USE_CLIENT_DEFAULT
 
-from openremote.url_builder import UrlBuilder
-from openremote.authenticator import Authenticator
-
+from .authenticator import Authenticator
+from .url_builder import UrlBuilder
 
 T = TypeVar('T')
 

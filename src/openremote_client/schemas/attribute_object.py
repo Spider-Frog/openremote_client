@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field
 from typing import Any, Literal
 
-from openremote.schemas.value_descriptor_object import ValueDescriptorObject
+from pydantic import BaseModel, Field
 
+from .value_descriptor_object import ValueDescriptorObject
 
 attribute_type = Literal[
     'assetID',
@@ -51,6 +51,7 @@ attribute_type = Literal[
     'UUID',
     'WS_URL'
 ]
+
 
 class AttributeObject(BaseModel):
     type: ValueDescriptorObject | attribute_type = None

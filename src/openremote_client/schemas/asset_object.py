@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from openremote.schemas.attribute_object import AttributeObject
+from .attribute_object import AttributeObject
 
 
 class AssetObject(BaseModel):
