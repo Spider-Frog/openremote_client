@@ -13,9 +13,13 @@ T = TypeVar('T')
 
 
 class HttpClient:
-    def __init__(self, url_builder: UrlBuilder, authenticator: Authenticator):
+    def __init__(self, url_builder: UrlBuilder, authenticator: Authenticator, realm: str = 'master'):
         self.__url_builder = url_builder
         self.__authenticator = authenticator
+        self.__realm = realm
+
+    def set_realm(self, realm: str):
+        self.__realm = realm
 
     async def get(
             self,
@@ -35,7 +39,7 @@ class HttpClient:
 
         async with httpx.AsyncClient() as client:
             return await client.get(
-                url=self.__url_builder.build(path),
+                url=self.__url_builder.build(path, realm=self.__realm),
                 params=params,
                 headers=headers,
                 cookies=cookies,
@@ -67,7 +71,7 @@ class HttpClient:
 
         async with httpx.AsyncClient() as client:
             return await client.post(
-                url=self.__url_builder.build(path),
+                url=self.__url_builder.build(path, realm=self.__realm),
                 content=content,
                 data=data,
                 files=files,

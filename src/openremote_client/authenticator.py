@@ -20,7 +20,7 @@ class Authenticator:
     async def __authenticate(self):
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                self.__url_builder.build('/auth/realms/master/protocol/openid-connect/token'),
+                self.__url_builder.build_base('/auth/realms/master/protocol/openid-connect/token'),
                 data={
                     "grant_type": "client_credentials",
                     "client_id": self.__client_id,

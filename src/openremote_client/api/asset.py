@@ -11,7 +11,7 @@ class Asset:
         self.__client = client
 
     async def get_by_id(self, id: str) -> AssetObject | None:
-        response = await self.__client.get(f'/api/master/asset/{id}')
+        response = await self.__client.get(f'/asset/{id}')
 
         if response.is_error:
             return None
@@ -19,8 +19,6 @@ class Asset:
         return AssetObject(**response.json())
 
     async def query(self, query: dict[str, Any]) -> list[AssetObject]:
-        response = await self.__client.post(f'/api/master/asset/query', json=query)
-
-        print(response.status_code)
+        response = await self.__client.post(f'/asset/query', json=query)
 
         return [AssetObject(**item) for item in response.json()]

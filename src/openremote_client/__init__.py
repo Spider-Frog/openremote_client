@@ -1,22 +1,29 @@
 from pydantic import HttpUrl
 
-from openremote.api.asset import Asset
-from openremote.authenticator import Authenticator
-from openremote.http import HttpClient
-from openremote.schemas.asset_object import AssetObject
-from openremote.url_builder import UrlBuilder
+from .authenticator import Authenticator
+from .http import HttpClient
+from .url_builder import UrlBuilder
+
+from .api.asset import Asset
+from .api.status import Status
 
 
 class OpenRemoteClient:
-    authenticator: Authenticator
-    url_builder: UrlBuilder
-    http_client: HttpClient
+    __authenticator: Authenticator
+    __url_builder: UrlBuilder
+    __http_client: HttpClient
 
     asset: Asset
+    status: Status
 
-    def __init__(self, openremote_host: HttpUrl | str, client_id: str, client_secret: str):
-        self.url_builder = UrlBuilder(openremote_host)
-        self.authenticator = Authenticator(self.url_builder, client_id, client_secret)
-        self.http_client = HttpClient(self.url_builder, self.authenticator)
+    def __init__(self, host: HttpUrl | str, client_id: str, client_secret: str, realm: str = 'master'):
+        self.__url_builder = UrlBuilder(host)
+        self.__authenticator = Authenticator(self.__url_builder, client_id, client_secret)
+        self.__http_client = HttpClient(self.__url_builder, self.__authenticator, realm)
 
-        self.asset = Asset(self.http_client)
+        # Init API endpoints
+        self.asset = Asset(self.__http_client)
+        self.status = Status(self.__http_client)
+
+    def set_realm(self, realm: str):
+        self.__http_client.set_realm(realm)
