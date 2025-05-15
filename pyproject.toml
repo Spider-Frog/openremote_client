@@ -1,6 +1,6 @@
 [project]
 name = "openremote-client"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
     { name="SpiderFrog", email="germanspiderfrog@gmail.com" },
 ]
