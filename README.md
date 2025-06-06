@@ -38,7 +38,7 @@ asset = await or_client.asset.query({
 })
 ```
 
-Authentication is handled automatically by the client.
+The client handles authentication automatically.
 
 
 ## Development guide

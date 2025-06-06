@@ -84,3 +84,71 @@ class HttpClient:
                 timeout=timeout,
                 extensions=extensions,
             )
+
+    async def put(
+            self,
+            path: str,
+            content: Optional[RequestContent] = None,
+            data: Optional[RequestData] = None,
+            files: Optional[RequestFiles] = None,
+            json: Optional[Any] = None,
+            params: Optional[QueryParamTypes] = None,
+            headers: Optional[HeaderTypes] = None,
+            cookies: Optional[CookieTypes] = None,
+            auth: Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+            follow_redirects: Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+            timeout: Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+            extensions: Optional[RequestExtensions] = None,
+    ) -> Response:
+        if headers is None:
+            headers = {}
+
+        headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
+
+        async with httpx.AsyncClient() as client:
+            return await client.put(
+                url=self.__url_builder.build(path, realm=self.__realm),
+                content=content,
+                data=data,
+                files=files,
+                json=json,
+                params=params,
+                headers=headers,
+                cookies=cookies,
+                auth=auth,
+                follow_redirects=follow_redirects,
+                timeout=timeout,
+                extensions=extensions,
+            )
+
+    async def delete(
+            self,
+            path: str,
+            content: Optional[RequestContent] = None,
+            data: Optional[RequestData] = None,
+            files: Optional[RequestFiles] = None,
+            json: Optional[Any] = None,
+            params: Optional[QueryParamTypes] = None,
+            headers: Optional[HeaderTypes] = None,
+            cookies: Optional[CookieTypes] = None,
+            auth: Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+            follow_redirects: Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+            timeout: Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+            extensions: Optional[RequestExtensions] = None,
+    ) -> Response:
+        if headers is None:
+            headers = {}
+
+        headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
+
+        async with httpx.AsyncClient() as client:
+            return await client.delete(
+                url=self.__url_builder.build(path, realm=self.__realm),
+                params=params,
+                headers=headers,
+                cookies=cookies,
+                auth=auth,
+                follow_redirects=follow_redirects,
+                timeout=timeout,
+                extensions=extensions,
+            )
