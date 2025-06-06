@@ -26,11 +26,8 @@ class OpenRemoteClient:
         self.status = Status(self.__http_client)
 
         self.get = self.__http_client.get
-
         self.post = self.__http_client.post
-
         self.put = self.__http_client.put
-
         self.delete = self.__http_client.delete
 
     def set_realm(self, realm: str):
