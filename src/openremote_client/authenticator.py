@@ -12,13 +12,14 @@ class Authenticator:
     access_token: str | None = None
     expires_on: datetime | None = None
 
-    def __init__(self, url_builder: UrlBuilder, client_id: str, client_secret: str):
+    def __init__(self, url_builder: UrlBuilder, client_id: str, client_secret: str, verify_SSL: bool = True):
         self.__url_builder = url_builder
         self.__client_id = client_id
         self.__client_secret = client_secret
+        self.__verify_SSL = verify_SSL
 
     async def __authenticate(self):
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=self.__verify_SSL) as client:
             response = await client.post(
                 self.__url_builder.build_base('/auth/realms/master/protocol/openid-connect/token'),
                 data={
@@ -27,7 +28,7 @@ class Authenticator:
                     "client_secret": self.__client_secret,
                     "scope": "profile"
                 },
-                headers={"Content-Type": "application/x-www-form-urlencoded"}
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
             response.raise_for_status()
 

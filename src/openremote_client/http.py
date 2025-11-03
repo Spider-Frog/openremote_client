@@ -13,10 +13,11 @@ T = TypeVar('T')
 
 
 class HttpClient:
-    def __init__(self, url_builder: UrlBuilder, authenticator: Authenticator, realm: str = 'master'):
+    def __init__(self, url_builder: UrlBuilder, authenticator: Authenticator, realm: str = 'master', verify_SSL: bool = True):
         self.__url_builder = url_builder
         self.__authenticator = authenticator
         self.__realm = realm
+        self.__verify_SSL = verify_SSL
 
     def set_realm(self, realm: str):
         self.__realm = realm
@@ -37,7 +38,7 @@ class HttpClient:
 
         headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=self.__verify_SSL) as client:
             return await client.get(
                 url=self.__url_builder.build(path, realm=self.__realm),
                 params=params,
@@ -69,7 +70,7 @@ class HttpClient:
 
         headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=self.__verify_SSL) as client:
             return await client.post(
                 url=self.__url_builder.build(path, realm=self.__realm),
                 content=content,
@@ -105,7 +106,7 @@ class HttpClient:
 
         headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=self.__verify_SSL) as client:
             return await client.put(
                 url=self.__url_builder.build(path, realm=self.__realm),
                 content=content,
@@ -141,7 +142,7 @@ class HttpClient:
 
         headers['Authorization'] = f'Bearer {await self.__authenticator.get_token()}'
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=self.__verify_SSL) as client:
             return await client.delete(
                 url=self.__url_builder.build(path, realm=self.__realm),
                 params=params,
