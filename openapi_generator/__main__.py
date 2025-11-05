@@ -25,15 +25,15 @@ def main(source: str, output: str):
         with open(f"./{output}/api/{convert_to_snake_case(name)}.py", "w") as file:
             file.write(schema)
 
-    # pathlib.Path(output, 'schemas').mkdir(parents=True, exist_ok=True)
-    #
-    # schemas = generate_pydantic_models(openapi['components']['schemas'])
-    #
-    # for name, schema in schemas.items():
-    #     with open(f"./{output}/schemas/{convert_camel_case_to_snake_case(name)}.py", "w") as file:
-    #         file.write(schema)
-    #
-    # print(schemas)
+    pathlib.Path(output, 'schemas').mkdir(parents=True, exist_ok=True)
+
+    schemas = generate_pydantic_models(openapi['components']['schemas'])
+
+    for name, schema in schemas.items():
+        with open(f"./{output}/schemas/{convert_camel_case_to_snake_case(name)}.py", "w") as file:
+            file.write(schema)
+
+    print(schemas)
 
 if __name__ == '__main__':
     main()

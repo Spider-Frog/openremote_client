@@ -28,7 +28,10 @@ def create_new_class(tag: str, endpoints: dict):
     file_lines = [
         "from httpx import Response",
         "",
-        "from ..http import HttpClient"
+        "from ..http import HttpClient",
+        "from ..response import ResponseModel",
+        "from httpx._types import QueryParamTypes, HeaderTypes, CookieTypes, AuthTypes, TimeoutTypes, RequestExtensions, \
+    RequestContent, RequestData, RequestFiles"
     ]
 
 
@@ -56,6 +59,36 @@ def create_new_class(tag: str, endpoints: dict):
     return '\n'.join(file_lines)
 
 
+def endpoint_resolve_return(endpoint: dict) -> str:
+    output = 'Any'
+
+    for status_code, response in endpoint.get('responses').items():
+        if status_code == '204':
+            output = "None"
+            break
+
+        if status_code.startswith('2') and 'application/json' in response.get('content').keys():
+            schema = response.get('content').get('application/json').get('schema')
+
+            if not schema:
+                output = "None"
+                break
+
+            if '$ref' in schema.keys():
+                output = schema.get('$ref').split('/')[-1]
+                break
+            elif 'type' in schema.keys():
+                match schema.get('type'):
+                    case "array":
+                        output = "list"
+                        break
+                    case "object":
+                        output = "dict"
+                        break
+
+    return f"{output}"
+
+
 def parse_endpoint(endpoint: dict):
 
     endpoint_name = endpoint.get('operationId')
@@ -63,9 +96,42 @@ def parse_endpoint(endpoint: dict):
     endpoint_path = endpoint.get('path')
     endpoint_description = endpoint.get('summary')
 
+    parameters = endpoint.get('parameters')
+    path_parameters = []
+
+    if parameters:
+        for parameter in parameters:
+            if parameter.get('in') == 'path':
+                path_parameters.append(parameter)
+
+    def resolve_function_parameters() -> str:
+        params = ['self']
+
+        # Resolve path parameters first
+        for path_parameter in path_parameters:
+            param = ''
+
+            match path_parameter.get('schema').get('type'):
+                case "string":
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))} = str"
+                case "integer":
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))} = int"
+
+            if not path_parameter.get('required'):
+                param += f"{param} | None = None"
+
+            params.append(param)
+
+        params.append('headers: HeaderTypes | None = None')
+
+        if not params:
+            return ''
+
+        return ', '.join(params)
+
     # Function start
     lines = [
-        f"    async def {convert_camel_case_to_snake_case(endpoint_name)}(self) -> Response:"
+        f"    async def {convert_camel_case_to_snake_case(endpoint_name)}({resolve_function_parameters()}) -> ResponseModel[{endpoint_resolve_return(endpoint)}]:"
     ]
 
     # Description start
@@ -82,7 +148,8 @@ def parse_endpoint(endpoint: dict):
     for status_code, response in endpoint.get('responses').items():
         responses_lines.extend([
             "",
-            f"        {status_code} - {response.get('description')}",
+            f"          {status_code} - {response.get('description')}",
+            f"          {response.get('content')}",
             ""
         ])
 
@@ -95,7 +162,18 @@ def parse_endpoint(endpoint: dict):
 
     # Function code
     lines.extend([
-        f"        return await self.__client.{endpoint_method}('{endpoint_path}')",
+        f"        response = await self.__client.{endpoint_method}(",
+        f"            path={'f' if path_parameters else ''}'{convert_camel_case_to_snake_case(endpoint_path)}',",
+        f"            headers=headers",
+        f"        )",
+        "",
+        "        response.raise_for_status()",
+        "",
+        "        return ResponseModel(",
+        "            status_code=response.status_code,",
+        f"            content={endpoint_resolve_return(endpoint)}(**response.json()),",
+        "            response=response",
+        "        )",
         ""
     ])
 

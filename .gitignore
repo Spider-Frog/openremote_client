@@ -178,3 +178,5 @@ dev/
 node_modules
 docs/.vitepress/dist
 docs/.vitepress/cache
+
+openapi.json
