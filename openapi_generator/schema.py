@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
-from utils import convert_to_snake_case
+
+from openapi_generator.utils import convert_camel_case_to_snake_case
 
 def get_import(prop_schema: Dict[str, Any]) -> str | None:
     if prop_schema.get('$ref'):
@@ -16,7 +17,7 @@ def get_import(prop_schema: Dict[str, Any]) -> str | None:
 
 def get_prop_type(prop_schema: Dict[str, Any]) -> str:
     if prop_schema.get('$ref'):
-        return prop_schema['$ref'].split('/')[-1]
+        return prop_schema['$ref'].split('/')[-1] + "Schema"
 
     match prop_schema.get('type'):
         case "string":
@@ -45,6 +46,9 @@ def parse_property(prop_name: str, prop_schema: Dict[str, Any], required_props: 
         required_props = []
 
     prop_type = get_prop_type(prop_schema)
+
+    if prop_name in ['from', 'def', 'class', 'if', 'elif', 'else', 'match', 'case', 'for', 'while', 'except', 'continue']:
+        prop_name = f"{prop_name}_"
 
     output = f"{prop_name}: {prop_type}"
 
@@ -142,7 +146,11 @@ def generate_pydantic_models(components: Dict[str, Any]) -> dict[str, str]:
         ])
 
         for import_name in file_imports:
-            file_lines.append(f"from .{convert_to_snake_case(import_name)} import {import_name}")
+            if import_name == name:
+                file_lines.insert(0, f"from __future__ import annotations")
+                file_lines.insert(0, f"")
+                continue
+            file_lines.append(f"from .{convert_camel_case_to_snake_case(import_name)} import {import_name}Schema")
 
 
         file_lines.extend([
@@ -154,7 +162,7 @@ def generate_pydantic_models(components: Dict[str, Any]) -> dict[str, str]:
             ""
         ])
 
-        file_lines.append(f"class {name}(BaseModel):")
+        file_lines.append(f"class {name}Schema(BaseModel):")
         file_lines.extend(file_content)
         files[name] = '\n'.join(file_lines)
 

@@ -1,4 +1,4 @@
-from utils import convert_camel_case_to_snake_case, convert_to_camel_case
+from utils import convert_camel_case_to_snake_case, convert_to_camel_case, resolve_type
 
 
 def generate_api(paths: dict[str, dict]):
@@ -26,13 +26,28 @@ def generate_api(paths: dict[str, dict]):
 
 def create_new_class(tag: str, endpoints: dict):
     file_lines = [
-        "from httpx import Response",
-        "",
-        "from ..http import HttpClient",
         "from ..response import ResponseModel",
-        "from httpx._types import QueryParamTypes, HeaderTypes, CookieTypes, AuthTypes, TimeoutTypes, RequestExtensions, \
-    RequestContent, RequestData, RequestFiles"
+        "",
+        "from typing import Any, Literal",
+        "from ..http import HttpClient",
+        "from httpx._types import HeaderTypes",
+        ""
     ]
+
+    imports = set()
+
+    for endpoint in endpoints:
+        return_class = endpoint_resolve_return(endpoint)
+        request_body = endpoint_resolve_request_body(endpoint)
+
+        if return_class not in ['None', 'Any', 'list', 'dict', 'Literal', 'str', 'int', 'float', 'bool']:
+            imports.add(return_class)
+
+        if request_body not in [None, 'None', 'Any', 'list', 'dict', 'Literal', 'str', 'int', 'float', 'bool']:
+            imports.add(request_body)
+
+    for import_stmt in imports:
+        file_lines.append(f"from ..schemas.{convert_camel_case_to_snake_case(import_stmt).removesuffix('_schema')} import {import_stmt}")
 
 
     file_lines.extend([
@@ -57,6 +72,14 @@ def create_new_class(tag: str, endpoints: dict):
         file_lines.extend(parse_endpoint(endpoint))
 
     return '\n'.join(file_lines)
+
+
+def endpoint_resolve_request_body(endpoint: dict) -> str | None:
+    if 'requestBody' in endpoint.keys():
+        if "application/json" in endpoint.get('requestBody').get('content').keys():
+            return resolve_type(endpoint.get('requestBody').get('content').get('application/json').get('schema'))
+
+    return None
 
 
 def endpoint_resolve_return(endpoint: dict) -> str:
@@ -86,7 +109,10 @@ def endpoint_resolve_return(endpoint: dict) -> str:
                         output = "dict"
                         break
 
-    return f"{output}"
+    if output not in ['None', 'Any', 'int', 'str', 'bool', 'list', 'dict', 'Literal', 'float']:
+        output += "Schema"
+
+    return output
 
 
 def parse_endpoint(endpoint: dict):
@@ -96,8 +122,12 @@ def parse_endpoint(endpoint: dict):
     endpoint_path = endpoint.get('path')
     endpoint_description = endpoint.get('summary')
 
+    endpoint_return = endpoint_resolve_return(endpoint)
+
     parameters = endpoint.get('parameters')
     path_parameters = []
+
+    request_body = endpoint_resolve_request_body(endpoint)
 
     if parameters:
         for parameter in parameters:
@@ -113,25 +143,32 @@ def parse_endpoint(endpoint: dict):
 
             match path_parameter.get('schema').get('type'):
                 case "string":
-                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))} = str"
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))}: str"
                 case "integer":
-                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))} = int"
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))}: int"
+                case "float":
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))}: float"
+                case "bool":
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))}: bool"
+                case _:
+                    param = f"{convert_camel_case_to_snake_case(path_parameter.get('name'))}: Any"
 
             if not path_parameter.get('required'):
                 param += f"{param} | None = None"
 
             params.append(param)
 
-        params.append('headers: HeaderTypes | None = None')
+        if request_body:
+            params.append(f"{convert_camel_case_to_snake_case(request_body)}: {request_body}")
 
-        if not params:
-            return ''
+
+        params.append('headers: HeaderTypes | None = None')
 
         return ', '.join(params)
 
     # Function start
     lines = [
-        f"    async def {convert_camel_case_to_snake_case(endpoint_name)}({resolve_function_parameters()}) -> ResponseModel[{endpoint_resolve_return(endpoint)}]:"
+        f"    async def {convert_camel_case_to_snake_case(endpoint_name)}({resolve_function_parameters()}) -> ResponseModel[{endpoint_return}]:"
     ]
 
     # Description start
@@ -160,18 +197,24 @@ def parse_endpoint(endpoint: dict):
         f'        """',
     ])
 
+    request_body_line = ""
+
+    if request_body is not None:
+        if request_body.endswith('Schema'):
+            request_body_line = f"            json={convert_camel_case_to_snake_case(request_body)}.model_dump(),\n"
+
     # Function code
     lines.extend([
         f"        response = await self.__client.{endpoint_method}(",
         f"            path={'f' if path_parameters else ''}'{convert_camel_case_to_snake_case(endpoint_path)}',",
-        f"            headers=headers",
+        f"{request_body_line}            headers=headers",
         f"        )",
         "",
         "        response.raise_for_status()",
         "",
         "        return ResponseModel(",
         "            status_code=response.status_code,",
-        f"            content={endpoint_resolve_return(endpoint)}(**response.json()),",
+        f"            content={endpoint_return}{'(**response.json())' if endpoint_return not in ['None', 'Any'] else ''},",
         "            response=response",
         "        )",
         ""

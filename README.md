@@ -14,8 +14,9 @@ pip install openremote_client
 ```
 
 2. Then import the package into your project.
+
 ```python
-from src.openremote_client import OpenRemoteClient
+from openremote_client import OpenRemoteClient
 ```
 
 3. Now initialize the OpenRemote client with some config.

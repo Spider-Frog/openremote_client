@@ -18,3 +18,28 @@ def convert_to_camel_case(name: str):
     components = split_pattern.split(name)
 
     return ''.join(x.capitalize() for x in components)
+
+
+def resolve_type(type_object: dict[str, str | dict]):
+    if '$ref' in type_object.keys():
+        return type_object['$ref'].split('/')[-1] + "Schema"
+
+    match type_object.get('type'):
+        case "string":
+            return "str"
+        case "integer":
+            return "int"
+        case "number":
+            return "float"
+        case "boolean":
+            return "bool"
+        case "bool":
+            return "bool"
+        case "array":
+            if 'items' not in type_object.keys():
+                return "list"
+
+            if '$ref' in type_object['items'].keys():
+                return type_object['items']['$ref'].split('/')[-1] + "Schema"
+        case _ as test:
+            return "Any"
