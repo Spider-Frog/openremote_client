@@ -5,6 +5,7 @@ from ..http import HttpClient
 from httpx._types import HeaderTypes
 
 from ..schemas.json_node import JsonNodeSchema
+from ..schemas.sent_notification import SentNotificationSchema
 from ..schemas.notification import NotificationSchema
 
 ################################################################
@@ -18,7 +19,7 @@ class Notification:
     def __init__(self, client: HttpClient):
         self.__client = client
 
-    async def get_notifications(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_notifications(self, headers: HeaderTypes | None = None) -> ResponseModel[list[SentNotificationSchema]]:
         """
         Retrieve all sent notifications by targets
 
@@ -37,7 +38,7 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[SentNotificationSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -60,7 +61,7 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -84,7 +85,7 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -107,7 +108,7 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -130,7 +131,7 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -154,6 +155,6 @@ class Notification:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )

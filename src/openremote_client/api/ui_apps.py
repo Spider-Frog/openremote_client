@@ -39,7 +39,7 @@ class UiApps:
             response=response
         )
 
-    async def get_apps(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_apps(self, headers: HeaderTypes | None = None) -> ResponseModel[list[str]]:
         """
         Retrieve a list of the available applications
 
@@ -58,7 +58,7 @@ class UiApps:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[response for response in response.json()],
             response=response
         )
 

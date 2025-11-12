@@ -17,7 +17,7 @@ class Provisioning:
     def __init__(self, client: HttpClient):
         self.__client = client
 
-    async def get_provisioning_configs(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_provisioning_configs(self, headers: HeaderTypes | None = None) -> ResponseModel[list[ProvisioningConfigObjectObjectSchema]]:
         """
         Retrieve all provisioning configurations
 
@@ -36,7 +36,7 @@ class Provisioning:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[ProvisioningConfigObjectObjectSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -60,7 +60,7 @@ class Provisioning:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -84,7 +84,7 @@ class Provisioning:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 

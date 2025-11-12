@@ -35,7 +35,7 @@ class Status:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=dict(**response.json()),
+            content=dict,
             response=response
         )
 
@@ -58,6 +58,6 @@ class Status:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=dict(**response.json()),
+            content=dict,
             response=response
         )

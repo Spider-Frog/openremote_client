@@ -17,7 +17,7 @@ class Realm:
     def __init__(self, client: HttpClient):
         self.__client = client
 
-    async def get_all_realms(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_all_realms(self, headers: HeaderTypes | None = None) -> ResponseModel[list[RealmSchema]]:
         """
         Retrieve all realms
 
@@ -36,7 +36,7 @@ class Realm:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[RealmSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -83,7 +83,7 @@ class Realm:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=RealmSchema(**response.json()),
+            content=RealmSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -134,7 +134,7 @@ class Realm:
             response=response
         )
 
-    async def get_accessible_realms(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_accessible_realms(self, headers: HeaderTypes | None = None) -> ResponseModel[list[RealmSchema]]:
         """
         Retrieve accessible realms for the authenticated user
 
@@ -153,6 +153,6 @@ class Realm:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[RealmSchema.model_construct(**response) for response in response.json()],
             response=response
         )

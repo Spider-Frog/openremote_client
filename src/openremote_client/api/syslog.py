@@ -59,7 +59,7 @@ class Syslog:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -82,7 +82,7 @@ class Syslog:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=SyslogConfigSchema(**response.json()),
+            content=SyslogConfigSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -106,6 +106,6 @@ class Syslog:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )

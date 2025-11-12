@@ -37,6 +37,6 @@ class Console:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ConsoleRegistrationSchema(**response.json()),
+            content=ConsoleRegistrationSchema.model_construct(**response.json()),
             response=response
         )

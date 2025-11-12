@@ -37,7 +37,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -60,7 +60,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -83,7 +83,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -107,7 +107,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -130,7 +130,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -153,7 +153,7 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -176,6 +176,6 @@ class Map:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ObjectNodeSchema(**response.json()),
+            content=ObjectNodeSchema.model_construct(**response.json()),
             response=response
         )

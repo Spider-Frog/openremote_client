@@ -5,6 +5,7 @@ from ..http import HttpClient
 from httpx._types import HeaderTypes
 
 from ..schemas.json_node import JsonNodeSchema
+from ..schemas.asset_descriptor_object import AssetDescriptorObjectSchema
 from ..schemas.asset_type_info import AssetTypeInfoSchema
 
 ################################################################
@@ -18,7 +19,7 @@ class AssetModel:
     def __init__(self, client: HttpClient):
         self.__client = client
 
-    async def get_asset_descriptors(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_asset_descriptors(self, headers: HeaderTypes | None = None) -> ResponseModel[list[AssetDescriptorObjectSchema]]:
         """
         Retrieve the available asset descriptors
 
@@ -37,7 +38,7 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[AssetDescriptorObjectSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -60,11 +61,11 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=AssetTypeInfoSchema(**response.json()),
+            content=AssetTypeInfoSchema.model_construct(**response.json()),
             response=response
         )
 
-    async def get_asset_infos(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_asset_infos(self, headers: HeaderTypes | None = None) -> ResponseModel[list[AssetTypeInfoSchema]]:
         """
         Retrieve the asset type information of each available asset type
 
@@ -83,7 +84,7 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[AssetTypeInfoSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -106,7 +107,7 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=dict(**response.json()),
+            content=dict,
             response=response
         )
 
@@ -129,7 +130,7 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=JsonNodeSchema(**response.json()),
+            content=JsonNodeSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -152,6 +153,6 @@ class AssetModel:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=dict(**response.json()),
+            content=dict,
             response=response
         )

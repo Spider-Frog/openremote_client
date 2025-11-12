@@ -38,11 +38,11 @@ class AssetPredictedDatapoint:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
-    async def get_predicted_datapoints(self, asset_id: str, attribute_name: str, asset_datapoint_query_schema: AssetDatapointQuerySchema, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_predicted_datapoints(self, asset_id: str, attribute_name: str, asset_datapoint_query_schema: AssetDatapointQuerySchema, headers: HeaderTypes | None = None) -> ResponseModel[list[ValueDatapointObjectSchema]]:
         """
         Retrieve the predicted datapoints of an asset attribute
 
@@ -62,6 +62,6 @@ class AssetPredictedDatapoint:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[ValueDatapointObjectSchema.model_construct(**response) for response in response.json()],
             response=response
         )

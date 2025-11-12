@@ -37,7 +37,9 @@ def create_new_class(tag: str, endpoints: dict):
     imports = set()
 
     for endpoint in endpoints:
-        return_class = endpoint_resolve_return(endpoint)
+        return_class = endpoint_resolve_return(endpoint).removeprefix('list[').removesuffix(']')
+        # print(endpoint_resolve_return(endpoint))
+        # print(return_class)
         request_body = endpoint_resolve_request_body(endpoint)
 
         if return_class not in ['None', 'Any', 'list', 'dict', 'Literal', 'str', 'int', 'float', 'bool']:
@@ -104,13 +106,59 @@ def endpoint_resolve_return(endpoint: dict) -> str:
                 match schema.get('type'):
                     case "array":
                         output = "list"
+
+                        list_schema = schema.get('items')
+
+                        if '$ref' in list_schema.keys():
+                            output = f"list[{list_schema.get('$ref').split('/')[-1]}Schema]"
+                        elif 'type' in list_schema.keys():
+                            output = f"list[{resolve_type(list_schema)}]"
+
                         break
                     case "object":
                         output = "dict"
                         break
 
-    if output not in ['None', 'Any', 'int', 'str', 'bool', 'list', 'dict', 'Literal', 'float']:
+    if output not in ['None', 'Any', 'int', 'str', 'bool', 'list', 'dict', 'Literal', 'float'] and "list" not in output:
         output += "Schema"
+
+    return output
+
+def endpoint_resolve_return_parser(endpoint: dict) -> str:
+    output = 'response.json()'
+
+    for status_code, response in endpoint.get('responses').items():
+        if status_code == '204':
+            output = "None"
+            break
+
+        if status_code.startswith('2') and 'application/json' in response.get('content').keys():
+            schema = response.get('content').get('application/json').get('schema')
+
+            if not schema:
+                output = "None"
+                break
+
+            if '$ref' in schema.keys():
+                output = schema.get('$ref').split('/')[-1] + "Schema" + ".model_construct(**response.json())"
+                break
+            elif 'type' in schema.keys():
+                match schema.get('type'):
+                    case "array":
+                        output = "list"
+
+                        list_schema = schema.get('items')
+
+                        if '$ref' in list_schema.keys():
+                            output = f"[{list_schema.get('$ref').split('/')[-1]}Schema.model_construct(**response) for response in response.json()]"
+                        elif 'type' in list_schema.keys():
+                            output = f"[response for response in response.json()]"
+
+                        break
+                    case "object":
+                        output = "dict"
+                        break
+
 
     return output
 
@@ -123,6 +171,7 @@ def parse_endpoint(endpoint: dict):
     endpoint_description = endpoint.get('summary')
 
     endpoint_return = endpoint_resolve_return(endpoint)
+    resolve_return_parser = endpoint_resolve_return_parser(endpoint)
 
     parameters = endpoint.get('parameters')
     path_parameters = []
@@ -214,7 +263,7 @@ def parse_endpoint(endpoint: dict):
         "",
         "        return ResponseModel(",
         "            status_code=response.status_code,",
-        f"            content={endpoint_return}{'(**response.json())' if endpoint_return not in ['None', 'Any'] else ''},",
+        f"            content={resolve_return_parser},",
         "            response=response",
         "        )",
         ""

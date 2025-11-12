@@ -40,7 +40,7 @@ class Services:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ExternalServiceSchema(**response.json()),
+            content=ExternalServiceSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -98,7 +98,7 @@ class Services:
             response=response
         )
 
-    async def get_global_services(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_global_services(self, headers: HeaderTypes | None = None) -> ResponseModel[list[ExternalServiceSchema]]:
         """
         List all registered external services that are globally accessible within the OpenRemote manager
 
@@ -117,7 +117,7 @@ class Services:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[ExternalServiceSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -149,11 +149,11 @@ class Services:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ExternalServiceSchema(**response.json()),
+            content=ExternalServiceSchema.model_construct(**response.json()),
             response=response
         )
 
-    async def get_services(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_services(self, headers: HeaderTypes | None = None) -> ResponseModel[list[ExternalServiceSchema]]:
         """
         List all registered external services for the given realm within the OpenRemote manager
 
@@ -172,7 +172,7 @@ class Services:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[ExternalServiceSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -204,6 +204,6 @@ class Services:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=ExternalServiceSchema(**response.json()),
+            content=ExternalServiceSchema.model_construct(**response.json()),
             response=response
         )

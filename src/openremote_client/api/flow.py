@@ -17,7 +17,7 @@ class Flow:
     def __init__(self, client: HttpClient):
         self.__client = client
 
-    async def get_all_node_definitions(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_all_node_definitions(self, headers: HeaderTypes | None = None) -> ResponseModel[list[NodeSchema]]:
         """
         Retrieve all node definitions
 
@@ -36,11 +36,11 @@ class Flow:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[NodeSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
-    async def get_all_node_definitions_by_type(self, type: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_all_node_definitions_by_type(self, type: str, headers: HeaderTypes | None = None) -> ResponseModel[list[NodeSchema]]:
         """
         Retrieve all node definitions by type
 
@@ -59,7 +59,7 @@ class Flow:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[NodeSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -82,6 +82,6 @@ class Flow:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=NodeSchema(**response.json()),
+            content=NodeSchema.model_construct(**response.json()),
             response=response
         )

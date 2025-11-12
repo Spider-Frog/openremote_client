@@ -4,9 +4,10 @@ from typing import Any, Literal
 from ..http import HttpClient
 from httpx._types import HeaderTypes
 
-from ..schemas.user_query import UserQuerySchema
 from ..schemas.credential import CredentialSchema
 from ..schemas.role import RoleSchema
+from ..schemas.user_query import UserQuerySchema
+from ..schemas.user_session import UserSessionSchema
 from ..schemas.user import UserSchema
 
 ################################################################
@@ -40,7 +41,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=UserSchema(**response.json()),
+            content=UserSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -64,7 +65,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=UserSchema(**response.json()),
+            content=UserSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -87,7 +88,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -110,7 +111,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -133,11 +134,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=UserSchema(**response.json()),
+            content=UserSchema.model_construct(**response.json()),
             response=response
         )
 
-    async def get_client_roles(self, realm: str, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_client_roles(self, realm: str, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list[RoleSchema]]:
         """
         Retrieve client roles for a realm and client
 
@@ -156,7 +157,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[RoleSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -180,7 +181,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -203,11 +204,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=UserSchema(**response.json()),
+            content=UserSchema.model_construct(**response.json()),
             response=response
         )
 
-    async def get_current_user_client_roles(self, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_current_user_client_roles(self, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list[str]]:
         """
         Retrieve client roles for the currently authenticated user using a client ID
 
@@ -226,11 +227,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[response for response in response.json()],
             response=response
         )
 
-    async def get_current_user_realm_roles(self, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_current_user_realm_roles(self, headers: HeaderTypes | None = None) -> ResponseModel[list[str]]:
         """
         Retrieve realm roles for the currently authenticated user
 
@@ -249,11 +250,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[response for response in response.json()],
             response=response
         )
 
-    async def get_user_client_roles(self, realm: str, user_id: str, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_user_client_roles(self, realm: str, user_id: str, client_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list[str]]:
         """
         Retrieve client roles for a user using a client ID in a realm
 
@@ -272,7 +273,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[response for response in response.json()],
             response=response
         )
 
@@ -295,11 +296,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
-    async def get_user_realm_roles(self, realm: str, user_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_user_realm_roles(self, realm: str, user_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list[str]]:
         """
         Retrieve realm roles for a user in a realm
 
@@ -318,7 +319,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[response for response in response.json()],
             response=response
         )
 
@@ -341,11 +342,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
-    async def get_user_sessions(self, realm: str, user_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def get_user_sessions(self, realm: str, user_id: str, headers: HeaderTypes | None = None) -> ResponseModel[list[UserSessionSchema]]:
         """
         Retrieve sessions for a user in a realm
 
@@ -364,11 +365,11 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[UserSessionSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
-    async def query_users(self, user_query_schema: UserQuerySchema, headers: HeaderTypes | None = None) -> ResponseModel[list]:
+    async def query_users(self, user_query_schema: UserQuerySchema, headers: HeaderTypes | None = None) -> ResponseModel[list[UserSchema]]:
         """
         Query users based on criteria
 
@@ -388,7 +389,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=list(**response.json()),
+            content=[UserSchema.model_construct(**response) for response in response.json()],
             response=response
         )
 
@@ -457,7 +458,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -481,7 +482,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=UserSchema(**response.json()),
+            content=UserSchema.model_construct(**response.json()),
             response=response
         )
 
@@ -504,7 +505,7 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
 
@@ -576,6 +577,6 @@ class User:
 
         return ResponseModel(
             status_code=response.status_code,
-            content=Any,
+            content=response.json(),
             response=response
         )
