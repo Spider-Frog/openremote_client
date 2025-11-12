@@ -73,7 +73,7 @@ class UiApps:
 
         """
         response = await self.__client.get(
-            path='/apps/console_config',
+            path='/apps/consoleConfig',
             headers=headers
         )
 

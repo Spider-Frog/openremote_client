@@ -5,8 +5,8 @@ from ..http import HttpClient
 from httpx._types import HeaderTypes
 
 from ..schemas.credential import CredentialSchema
-from ..schemas.role import RoleSchema
 from ..schemas.user_query import UserQuerySchema
+from ..schemas.role import RoleSchema
 from ..schemas.user_session import UserSessionSchema
 from ..schemas.user import UserSchema
 
@@ -219,7 +219,7 @@ class User:
 
         """
         response = await self.__client.get(
-            path=f'/user/user_roles/{client_id}',
+            path=f'/user/userRoles/{client_id}',
             headers=headers
         )
 
@@ -242,7 +242,7 @@ class User:
 
         """
         response = await self.__client.get(
-            path='/user/user_realm_roles',
+            path='/user/userRealmRoles',
             headers=headers
         )
 
@@ -265,7 +265,7 @@ class User:
 
         """
         response = await self.__client.get(
-            path=f'/user/{realm}/user_roles/{user_id}/{client_id}',
+            path=f'/user/{realm}/userRoles/{user_id}/{client_id}',
             headers=headers
         )
 
@@ -288,7 +288,7 @@ class User:
 
         """
         response = await self.__client.put(
-            path=f'/user/{realm}/user_roles/{user_id}/{client_id}',
+            path=f'/user/{realm}/userRoles/{user_id}/{client_id}',
             headers=headers
         )
 
@@ -311,7 +311,7 @@ class User:
 
         """
         response = await self.__client.get(
-            path=f'/user/{realm}/user_realm_roles/{user_id}',
+            path=f'/user/{realm}/userRealmRoles/{user_id}',
             headers=headers
         )
 
@@ -334,7 +334,7 @@ class User:
 
         """
         response = await self.__client.put(
-            path=f'/user/{realm}/user_realm_roles/{user_id}',
+            path=f'/user/{realm}/userRealmRoles/{user_id}',
             headers=headers
         )
 
@@ -357,7 +357,7 @@ class User:
 
         """
         response = await self.__client.get(
-            path=f'/user/{realm}/user_sessions/{user_id}',
+            path=f'/user/{realm}/userSessions/{user_id}',
             headers=headers
         )
 

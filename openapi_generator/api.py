@@ -167,7 +167,15 @@ def parse_endpoint(endpoint: dict):
 
     endpoint_name = endpoint.get('operationId')
     endpoint_method = endpoint.get('method')
-    endpoint_path = endpoint.get('path')
+    endpoint_path = ''
+
+    for item in endpoint.get('path').removeprefix('/').split('/'):
+        endpoint_path += '/'
+        if item.startswith('{'):
+            endpoint_path += convert_camel_case_to_snake_case(item)
+        else:
+            endpoint_path += item
+
     endpoint_description = endpoint.get('summary')
 
     endpoint_return = endpoint_resolve_return(endpoint)
@@ -255,7 +263,7 @@ def parse_endpoint(endpoint: dict):
     # Function code
     lines.extend([
         f"        response = await self.__client.{endpoint_method}(",
-        f"            path={'f' if path_parameters else ''}'{convert_camel_case_to_snake_case(endpoint_path)}',",
+        f"            path={'f' if path_parameters else ''}'{endpoint_path}',",
         f"{request_body_line}            headers=headers",
         f"        )",
         "",
