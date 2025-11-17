@@ -32,8 +32,6 @@ class Realm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[RealmSchema.model_construct(**response) for response in response.json()],
@@ -56,8 +54,6 @@ class Realm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -78,8 +74,6 @@ class Realm:
             path=f'/realm/{name}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -103,8 +97,6 @@ class Realm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -126,8 +118,6 @@ class Realm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -148,8 +138,6 @@ class Realm:
             path='/realm/accessible',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

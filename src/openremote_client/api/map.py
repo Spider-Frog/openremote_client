@@ -33,8 +33,6 @@ class Map:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ObjectNodeSchema.model_construct(**response.json()),
@@ -56,8 +54,6 @@ class Map:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ObjectNodeSchema.model_construct(**response.json()),
@@ -78,8 +74,6 @@ class Map:
             path='/map',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -103,8 +97,6 @@ class Map:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ObjectNodeSchema.model_construct(**response.json()),
@@ -125,8 +117,6 @@ class Map:
             path='/map/js',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -149,8 +139,6 @@ class Map:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -171,8 +159,6 @@ class Map:
             path='/map/upload',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

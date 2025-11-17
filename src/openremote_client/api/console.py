@@ -33,8 +33,6 @@ class Console:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ConsoleRegistrationSchema.model_construct(**response.json()),

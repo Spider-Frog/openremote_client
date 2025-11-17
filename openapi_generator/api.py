@@ -267,8 +267,6 @@ def parse_endpoint(endpoint: dict):
         f"{request_body_line}            headers=headers",
         f"        )",
         "",
-        "        response.raise_for_status()",
-        "",
         "        return ResponseModel(",
         "            status_code=response.status_code,",
         f"            content={resolve_return_parser},",

@@ -36,8 +36,6 @@ class Services:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ExternalServiceSchema.model_construct(**response.json()),
@@ -62,8 +60,6 @@ class Services:
             path=f'/service/{service_id}/{instance_id}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -90,8 +86,6 @@ class Services:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -112,8 +106,6 @@ class Services:
             path='/service/global',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -145,8 +137,6 @@ class Services:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=ExternalServiceSchema.model_construct(**response.json()),
@@ -167,8 +157,6 @@ class Services:
             path='/service',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -199,8 +187,6 @@ class Services:
             json=external_service_schema.model_dump(),
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

@@ -32,8 +32,6 @@ class Provisioning:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[ProvisioningConfigObjectObjectSchema.model_construct(**response) for response in response.json()],
@@ -55,8 +53,6 @@ class Provisioning:
             json=provisioning_config_object_object_schema.model_dump(),
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -80,8 +76,6 @@ class Provisioning:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -102,8 +96,6 @@ class Provisioning:
             path=f'/provisioning/{id}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

@@ -10,5 +10,5 @@ class ResponseModel(BaseModel, Generic[T]):
     content: T
     response: Response
 
-    class Config:
+    class ConfigDict:
         arbitrary_types_allowed=True

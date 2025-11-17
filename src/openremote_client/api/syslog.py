@@ -32,8 +32,6 @@ class Syslog:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -54,8 +52,6 @@ class Syslog:
             path='/syslog/event',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -78,8 +74,6 @@ class Syslog:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=SyslogConfigSchema.model_construct(**response.json()),
@@ -101,8 +95,6 @@ class Syslog:
             json=syslog_config_schema.model_dump(),
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

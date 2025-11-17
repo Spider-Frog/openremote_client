@@ -33,8 +33,6 @@ class Alarm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[SentAlarmSchema.model_construct(**response) for response in response.json()],
@@ -55,8 +53,6 @@ class Alarm:
             path='/alarm',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -79,8 +75,6 @@ class Alarm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -101,8 +95,6 @@ class Alarm:
             path=f'/alarm/{alarm_id}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -125,8 +117,6 @@ class Alarm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -147,8 +137,6 @@ class Alarm:
             path=f'/alarm/{alarm_id}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -171,8 +159,6 @@ class Alarm:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[AlarmAssetLinkSchema.model_construct(**response) for response in response.json()],
@@ -193,8 +179,6 @@ class Alarm:
             path='/alarm/assets',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

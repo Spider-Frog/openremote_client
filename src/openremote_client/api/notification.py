@@ -4,8 +4,8 @@ from typing import Any, Literal
 from ..http import HttpClient
 from httpx._types import HeaderTypes
 
-from ..schemas.notification import NotificationSchema
 from ..schemas.sent_notification import SentNotificationSchema
+from ..schemas.notification import NotificationSchema
 from ..schemas.json_node import JsonNodeSchema
 
 ################################################################
@@ -34,8 +34,6 @@ class Notification:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[SentNotificationSchema.model_construct(**response) for response in response.json()],
@@ -56,8 +54,6 @@ class Notification:
             path='/notification',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -81,8 +77,6 @@ class Notification:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -103,8 +97,6 @@ class Notification:
             path=f'/notification/{notification_id}/delivered',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
@@ -127,8 +119,6 @@ class Notification:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -150,8 +140,6 @@ class Notification:
             json=notification_schema.model_dump(),
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,

@@ -34,8 +34,6 @@ class Agent:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[AssetTreeNodeSchema.model_construct(**response) for response in response.json()],
@@ -58,8 +56,6 @@ class Agent:
             headers=headers
         )
 
-        response.raise_for_status()
-
         return ResponseModel(
             status_code=response.status_code,
             content=[AssetTreeNodeSchema.model_construct(**response) for response in response.json()],
@@ -80,8 +76,6 @@ class Agent:
             path=f'/agent/instanceDiscovery/{agent_type}',
             headers=headers
         )
-
-        response.raise_for_status()
 
         return ResponseModel(
             status_code=response.status_code,
