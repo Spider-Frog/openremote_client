@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic
 
 from httpx import Response
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 T = TypeVar('T')
 
@@ -10,5 +10,4 @@ class ResponseModel(BaseModel, Generic[T]):
     content: T
     response: Response
 
-    class ConfigDict:
-        arbitrary_types_allowed=True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
