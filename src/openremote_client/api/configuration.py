@@ -34,6 +34,7 @@ class Configuration:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -55,6 +56,7 @@ class Configuration:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=ManagerAppConfigSchema.model_construct(**response.json()),
@@ -77,6 +79,7 @@ class Configuration:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=ManagerAppConfigSchema.model_construct(**response.json()),
@@ -98,6 +101,7 @@ class Configuration:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),

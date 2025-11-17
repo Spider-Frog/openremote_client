@@ -32,6 +32,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[RealmSchema.model_construct(**response) for response in response.json()],
@@ -54,6 +55,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -75,6 +77,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=RealmSchema.model_construct(**response.json()),
@@ -97,6 +100,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -118,6 +122,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -139,6 +144,7 @@ class Realm:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[RealmSchema.model_construct(**response) for response in response.json()],

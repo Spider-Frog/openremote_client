@@ -32,6 +32,7 @@ class Syslog:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -53,6 +54,7 @@ class Syslog:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -74,6 +76,7 @@ class Syslog:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=SyslogConfigSchema.model_construct(**response.json()),
@@ -96,6 +99,7 @@ class Syslog:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),

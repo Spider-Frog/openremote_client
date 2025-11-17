@@ -32,6 +32,7 @@ class Flow:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[NodeSchema.model_construct(**response) for response in response.json()],
@@ -53,6 +54,7 @@ class Flow:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[NodeSchema.model_construct(**response) for response in response.json()],
@@ -74,6 +76,7 @@ class Flow:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=NodeSchema.model_construct(**response.json()),

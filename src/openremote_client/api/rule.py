@@ -4,9 +4,9 @@ from typing import Any, Literal
 from ..http import HttpClient
 from httpx._types import HeaderTypes
 
+from ..schemas.global_ruleset import GlobalRulesetSchema
 from ..schemas.realm_ruleset import RealmRulesetSchema
 from ..schemas.asset_ruleset import AssetRulesetSchema
-from ..schemas.global_ruleset import GlobalRulesetSchema
 from ..schemas.rules_engine_info import RulesEngineInfoSchema
 from ..schemas.geofence_definition import GeofenceDefinitionSchema
 
@@ -37,6 +37,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -58,6 +59,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[GlobalRulesetSchema.model_construct(**response) for response in response.json()],
@@ -80,6 +82,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -102,6 +105,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -123,6 +127,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=AssetRulesetSchema.model_construct(**response.json()),
@@ -145,6 +150,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -166,6 +172,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -187,6 +194,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=GlobalRulesetSchema.model_construct(**response.json()),
@@ -209,6 +217,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -230,6 +239,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -251,6 +261,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=RealmRulesetSchema.model_construct(**response.json()),
@@ -273,6 +284,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -294,6 +306,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=response.json(),
@@ -315,6 +328,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=RulesEngineInfoSchema.model_construct(**response.json()),
@@ -336,6 +350,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[GeofenceDefinitionSchema.model_construct(**response) for response in response.json()],
@@ -357,6 +372,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[AssetRulesetSchema.model_construct(**response) for response in response.json()],
@@ -378,6 +394,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=RulesEngineInfoSchema.model_construct(**response.json()),
@@ -399,6 +416,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=RulesEngineInfoSchema.model_construct(**response.json()),
@@ -420,6 +438,7 @@ class Rule:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[RealmRulesetSchema.model_construct(**response) for response in response.json()],

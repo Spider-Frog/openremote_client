@@ -31,6 +31,7 @@ class UiApps:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
@@ -52,6 +53,7 @@ class UiApps:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=[response for response in response.json()],
@@ -73,6 +75,7 @@ class UiApps:
             headers=headers
         )
 
+        response.raise_for_status()
         return ResponseModel(
             status_code=response.status_code,
             content=None,
